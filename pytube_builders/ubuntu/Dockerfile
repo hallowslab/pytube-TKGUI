@@ -7,8 +7,8 @@ RUN set -xe && apt update && apt install -y \
   libbz2-dev libffi-dev libgdbm-dev liblzma-dev \
   libncurses5-dev libreadline6-dev libsqlite3-dev
 
-
-RUN sudo apt-get build-dep python3
+RUN sed -i -- 's/#deb-src/deb-src/g' /etc/apt/sources.list && sed -i -- 's/# deb-src/deb-src/g' /etc/apt/sources.list
+RUN apt update && apt build-dep -y python3
 
 SHELL ["/bin/bash", "-c"]
 RUN adduser --disabled-password --gecos '' proj
