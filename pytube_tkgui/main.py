@@ -12,13 +12,22 @@ def download_videos(text_element):
         try:
             yt = YouTube(url)
             compat_streams = yt.streams.filter(only_audio=True)
-            compat_streams = [stream for stream in compat_streams if getattr(stream, "mime_type", None) == "audio/mp4"]
+            compat_streams = [
+                stream
+                for stream in compat_streams
+                if getattr(stream, "mime_type", None) == "audio/mp4"
+            ]
             compat_streams[-1].download()
         except Exception as e:
-            messagebox.showerror("Error", f"It wasn't possible to download this url:\n{url}\nDue to the following error\n{e}")
-    messagebox.showinfo("Finished","The process is complete, you may now close the app")
+            messagebox.showerror(
+                "Error",
+                f"It wasn't possible to download this url:\n{url}\nDue to the following error\n{e}",
+            )
+    messagebox.showinfo(
+        "Finished", "The process is complete, you may now close the app"
+    )
 
-    
+
 window = tk.Tk()
 window.title("Pytube-TKGUI")
 mainframe = ttk.Frame(window, padding="3 3 12 12")
@@ -29,7 +38,6 @@ run_btn = Button(window, text="Download", command=lambda: download_videos(txt_ed
 
 txt_edit.grid(row=0, column=1, sticky="nsew")
 run_btn.grid(row=1, column=1, sticky="nsew")
-
 
 
 window.mainloop()
