@@ -1,0 +1,7 @@
+*.mp4
+.venv
+venv
+test*.txt
+build
+__pycache__
+dist
