@@ -1,5 +1,21 @@
 version: 2.1
 jobs:
+  lin-build:
+    docker:
+      - image: cimg/python:3.8
+      working_directory: ~/pytube-TKGUI/pytube_tkgui
+    steps:
+      - checkout:
+        path: ~/pytube-TKGUI
+      - run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+      - run: poetry install
+      - run: poetry run task build
+      - persist_to_workspace:
+          # Must be an absolute path, or relative path from working_directory
+          root: artifacts
+          # Must be relative path from root
+          paths:
+            - echo-output
   win-build:
     docker:
       - image: cimg/windows@2.2.0
@@ -14,16 +30,6 @@ jobs:
           # Must be relative path from root
           paths:
             - echo-output
-  lin-build:
-    docker:
-      - image: cimg/python:3.8
-    steps:
-      - attach_workspace:
-            at: ./artifacts
-      - checkout
-      - run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
-      - run: poetry install
-      - run: poetry run task build
   pgr:
     docker:
       - image: cibuilds/github:0.10

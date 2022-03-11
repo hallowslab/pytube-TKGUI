@@ -5,3 +5,4 @@ test*.txt
 build
 __pycache__
 dist
+music
