@@ -1,35 +1,48 @@
 version: 2.1
+orbs:
+  win: circleci/windows@2.4.1
 jobs:
   lin-build:
-    docker:
-      - image: cimg/python:3.8
-    working_directory: ~/pytube-TKGUI/pytube_tkgui
+    machine:
+      image: ubuntu-2004:current
     steps:
       - checkout:
-          path: ~/pytube-TKGUI
-      - run: curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+          path: ~/project
+      - run: pyenv install -v 3.8.10
+      - run: mkdir -p ~/project/artifacts
+      - run: echo "Trying out workspaces" > artifacts/echo-output
+      - run: curl -sSL https://install.python-poetry.org | python3 -
+      - run: source $HOME/.poetry/env
       - run: poetry install
+      - run: ls -al
       - run: poetry run task build
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
-          root: artifacts
+          root: ~/project/artifacts
           # Must be relative path from root
           paths:
             - echo-output
   win-build:
-    docker:
-      - image: cimg/windows@2.2.0
+    executor:
+      name: win/default
+      shell: powershell.exe
     steps:
       - checkout
+      - attach_workspace:
+          at: ./artifacts
       - run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-      - run: mkdir -p artifacts
-      - run: echo "Trying out workspaces" > artifacts/echo-output
+      - run: choco install python --version=3.8.10
+      - run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
+      - run: poetry install
+      - run: dir
+      - run: poetry run task build
+      - run: echo "Trying out workspaces" > artifacts/echo-output2
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: artifacts
           # Must be relative path from root
           paths:
-            - echo-output
+            - echo-output2
   pgr:
     docker:
       - image: cibuilds/github:0.10

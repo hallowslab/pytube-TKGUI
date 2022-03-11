@@ -1,9 +1,8 @@
-from cgi import test
 import tkinter as tk
 from tkinter import ttk, N, W, E, S, Button, messagebox
 from pytube import YouTube
 
-from utils import __version__
+__version__ = "0.1.0"
 
 
 def download_videos(text_element):
