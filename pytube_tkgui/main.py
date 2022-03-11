@@ -3,12 +3,14 @@ import tkinter as tk
 from tkinter import ttk, N, W, E, S, Button, messagebox
 from pytube import YouTube
 
+from utils import __version__
+
 
 def download_videos(text_element):
     contents = text_element.get("1.0", tk.END)
     url_list = [item for item in contents.split("\n") if item != ""]
     for url in url_list:
-        print(url)
+        print(f"Downloading {url}")
         try:
             yt = YouTube(url)
             compat_streams = yt.streams.filter(only_audio=True)
@@ -39,5 +41,5 @@ run_btn = Button(window, text="Download", command=lambda: download_videos(txt_ed
 txt_edit.grid(row=0, column=1, sticky="nsew")
 run_btn.grid(row=1, column=1, sticky="nsew")
 
-
-window.mainloop()
+if __name__ == "__main__":
+    window.mainloop()

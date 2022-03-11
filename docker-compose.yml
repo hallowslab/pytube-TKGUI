@@ -1,0 +1,14 @@
+version: '0.1.0'
+services:
+  ubuntu:
+    entrypoint: ['bash']
+    tty: true
+    build:
+      context: ./
+      dockerfile: ./pytube_builders/ubuntu/Dockerfile
+  windows:
+    entrypoint: ['bash']
+    tty: true
+    build:
+      context: ./
+      dockerfile: ./pytube_builders/windows/Dockerfile
