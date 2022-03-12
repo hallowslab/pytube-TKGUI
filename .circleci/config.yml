@@ -14,6 +14,8 @@ jobs:
       - run: poetry install
       - run: poetry run task build
       - run: mv dist/Pytube-TKGUI artifacts/Pytube-TKGUI_linux
+      - store_artifacts:
+          path: artifacts/
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: ~/project/artifacts
@@ -80,12 +82,12 @@ workflows:
       - lin-build:
           name: Linux
           requires: [Windows]
-      - pgr:
-          name: "Push Github Release"
-          requires: [Linux]
-          filters:
-            branches:
-              only:
-                - main
-            tags:
-              only: /^\d+\.\d+\.\d+$/
+#      - pgr:
+#          name: "Push Github Release"
+#          requires: [Linux]
+#          filters:
+#            branches:
+#              only:
+#                - main
+#            tags:
+#              only: /^\d+\.\d+\.\d+$/
