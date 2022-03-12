@@ -9,10 +9,10 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: mkdir -p ~/project/artifacts
+      - attach_workspace:
+          at: ./artifacts
       - run: poetry install
       - run: poetry run task build
-      - run: poetry run task format
       - run: mv dist/Pytube-TKGUI artifacts/Pytube-TKGUI_linux
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
@@ -20,6 +20,7 @@ jobs:
           # Must be relative path from root
           paths:
             - "Pytube-TKGUI_linux"
+            - "Pytube-TKGUI_windows.exe"
   win-build:
     executor:
       name: win/default
@@ -27,8 +28,6 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - attach_workspace:
-          at: ./artifacts
       - run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
       - run: choco install python --version=3.8.10
       - run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
@@ -37,13 +36,13 @@ jobs:
             command: "%APPDATA%\\Python\\Scripts\\poetry install"
             shell: cmd.exe
       - run:
-            name: "Poetry format" 
-            command: "%APPDATA%\\Python\\Scripts\\poetry run task format"
-            shell: cmd.exe
-      - run:
             name: "Poetry build" 
             command: "%APPDATA%\\Python\\Scripts\\poetry run task build"
             shell: cmd.exe
+      - run:
+          name: "Create artifacts"
+          command: mkdir artifacts
+          shell: bash.exe
       - run:
           name: "Copy executable to artifacts"
           command: mv dist/Pytube-TKGUI.exe artifacts/Pytube-TKGUI_windows.exe
