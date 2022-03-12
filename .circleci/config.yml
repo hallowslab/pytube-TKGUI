@@ -10,7 +10,7 @@ jobs:
       - checkout:
           path: ~/project
       - run: sudo apt install python3-dev
-      - run: pyenv install -v 3.8.10
+      - run: env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
       - run: curl -sSL https://install.python-poetry.org | python3 -
       - run: ~/.local/bin/poetry install
@@ -53,7 +53,7 @@ jobs:
           root: artifacts
           # Must be relative path from root
           paths:
-            - Pytube-TKGUI.exe
+            - "*.exe"
   pgr:
     docker:
       - image: cibuilds/github:0.10
