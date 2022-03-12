@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: sudo apt install python3-dev uild-essential libssl-dev python3-tk && sudo apt build-dep -y python3 && sudo apt build-dep -y python3-tk
+      - run: sudo apt install python3-dev libssl-dev python3-tk && sudo apt build-dep -y python3 && sudo apt build-dep -y python3-tk
       - run: CONFIGURE_OPTS=--enable-shared pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
       - run: curl -sSL https://install.python-poetry.org | python3 -
