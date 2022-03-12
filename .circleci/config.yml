@@ -79,8 +79,14 @@ workflows:
     jobs:
       - win-build:
           name: Windows
+          filters:
+            branches:
+              only: main
       - lin-build:
           name: Linux
+          filters:
+            branches:
+              only: main
           requires: [Windows]
 #      - pgr:
 #          name: "Push Github Release"
