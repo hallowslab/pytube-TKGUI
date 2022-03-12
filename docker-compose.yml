@@ -7,7 +7,6 @@ services:
       context: ./
       dockerfile: ./pytube_builders/ubuntu/Dockerfile
   windows:
-    entrypoint: ['bash']
     tty: true
     build:
       context: ./

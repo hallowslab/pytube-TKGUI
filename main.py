@@ -1,40 +1,24 @@
+import logging
 import sys
-import textwrap
 import tkinter as tk
-import argparse
-
-from pytube_tkgui.app import MainApplication
 
 from pytube_tkgui import __version__, __NAME__
-
-def retrieve_args():
-    description="Graphical user interface for downloading Youtube videos using pytube"
-    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
-    description=textwrap.dedent('''\
-        ######                                         ####### #    #  #####  #     # ### 
-        #     # #   # ##### #    # #####  ######          #    #   #  #     # #     #  #  
-        #     #  # #    #   #    # #    # #               #    #  #   #       #     #  #  
-        ######    #     #   #    # #####  #####  #####    #    ###    #  #### #     #  #  
-        #         #     #   #    # #    # #               #    #  #   #     # #     #  #  
-        #         #     #   #    # #    # #               #    #   #  #     # #     #  #  
-        #         #     #    ####  #####  ######          #    #    #  #####   #####  ### 
-        --------------------------------
-            Pytube-TKGUI is a graphical user interface for downloading youtube videos
-            using pytube
-    '''))
-    parser.add_argument("-v", "--version", action="store_true")
-    return parser.parse_args()
-
+from pytube_tkgui.app import MainApplication
+from pytube_tkgui.functions import retrieve_args, setup_logger
 
 if __name__ == "__main__":
     args = retrieve_args()
-    if getattr(args, "version", "none"):
+    if getattr(args, "version", None):
         sys.stdout.write(f"{__NAME__} version: {__version__}")
         sys.exit(0)
+    setup_logger(getattr(args, "log_level"))
+    logger = logging.getLogger(__name__)
     root = tk.Tk()
     MainApplication(root)
     try:
+        root.grid_columnconfigure(0,weight=1)
+        root.grid_rowconfigure(0,weight=1)
         root.mainloop()
     except Exception as e:
-        sys.stdout.write("Critical error: {e}")
+        logger.critical(f"Unhandled exception occurred:", exc_info=1)
         sys.exit(1)

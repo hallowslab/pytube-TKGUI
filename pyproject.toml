@@ -18,6 +18,7 @@ taskipy = "^1.10.1"
 test = "python -m unittest tests/test_*.py"
 format = "Black ."
 build = "pyinstaller main.spec"
+start = "python main.py"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
