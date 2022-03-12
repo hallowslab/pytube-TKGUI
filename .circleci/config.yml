@@ -12,10 +12,9 @@ jobs:
       - run: mkdir -p ~/project/artifacts
       - run: echo "Trying out workspaces" > artifacts/echo-output
       - run: curl -sSL https://install.python-poetry.org | python3 -
-      - run: source $HOME/.poetry/env
-      - run: poetry install
+      - run: ~/.local/bin/poetry install
+      - run: ~/.local/bin/poetry run task build
       - run: ls -al
-      - run: poetry run task build
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: ~/project/artifacts
@@ -33,9 +32,13 @@ jobs:
       - run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
       - run: choco install python --version=3.8.10
       - run: (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | python -
-      - run: poetry install
+      - run: "%APPDATA%\\Python\\Scripts\\poetry install"
       - run: dir
-      - run: poetry run task build
+      - run: "%APPDATA%\Python\\Scripts\\poetry run task build"
+      - run:
+          name: "Copy executable to artifacts"
+          command: mv build/* artifacts/
+          shell: bash.exe
       - run: echo "Trying out workspaces" > artifacts/echo-output2
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
