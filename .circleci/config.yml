@@ -61,6 +61,7 @@ jobs:
           at: ./artifacts
       - run: ls -al artifacts
       - run: chmod +x artifacts/Pytube-TKGUI_linux
+      - run: ldd artifacts/Pytube-TKGUI_linux
       - run:
           name: "Publish Release on GitHub"
           command: |
