@@ -9,20 +9,21 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: sudo apt install python3-dev
-      - run: env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install -v 3.8.10
+      - run: sudo apt install python3-dev tk-dev libgdbm-compat-dev && sudo apt build-dep -y python3 && sudo apt build-dep -y python-tk
+      - run: CONFIGURE_OPTS=--enable-shared pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
       - run: curl -sSL https://install.python-poetry.org | python3 -
       - run: ~/.local/bin/poetry install
       - run: ~/.local/bin/poetry run task build
       - run: ls -al
-      - run: mv build/* artifacts/
+      - run: ls -al dist
+      - run: mv dist/* artifacts/
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: ~/project/artifacts
           # Must be relative path from root
           paths:
-            - echo-output
+            - "*"
   win-build:
     executor:
       name: win/default
@@ -42,12 +43,12 @@ jobs:
             name: "Poetry build" 
             command: "%APPDATA%\\Python\\Scripts\\poetry run task build"
             shell: cmd.exe
-      - run: dir
       - run:
           name: "Copy executable to artifacts"
-          command: mv build/* artifacts/
+          command: mv dist/* artifacts/
           shell: bash.exe
-      - run: echo "Trying out workspaces" > artifacts/echo-output2
+      - run: dir
+      - run: dir dist
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: artifacts
