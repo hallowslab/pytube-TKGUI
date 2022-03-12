@@ -9,6 +9,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+      - run: "sed -i -- 's/#deb-src/deb-src/g' /etc/apt/sources.list && sed -i -- 's/# deb-src/deb-src/g' /etc/apt/sources.list"
       - run: sudo apt install python3-dev libssl-dev && sudo apt build-dep -y python3
       - run: CONFIGURE_OPTS=--enable-shared pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
