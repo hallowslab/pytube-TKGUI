@@ -12,23 +12,21 @@ jobs:
       - run: mkdir -p ~/project/artifacts
       - run: poetry install
       - run: poetry run task build
-      - run: ls -al
-      - run: ls -al dist
-      - run: mv dist/* artifacts/
-      - store_artifacts:
-          path: artifacts/
+      - run: poetry run task format
+      - run: mv dist/Pytube-TKGUI artifacts/Pytube-TKGUI_linux
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: ~/project/artifacts
           # Must be relative path from root
           paths:
-            - "*"
+            - "Pytube-TKGUI_linux"
   win-build:
     executor:
       name: win/default
       shell: powershell.exe
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
       - attach_workspace:
           at: ./artifacts
       - run: Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
@@ -39,23 +37,23 @@ jobs:
             command: "%APPDATA%\\Python\\Scripts\\poetry install"
             shell: cmd.exe
       - run:
+            name: "Poetry format" 
+            command: "%APPDATA%\\Python\\Scripts\\poetry run task format"
+            shell: cmd.exe
+      - run:
             name: "Poetry build" 
             command: "%APPDATA%\\Python\\Scripts\\poetry run task build"
             shell: cmd.exe
-      - run: dir dist
       - run:
           name: "Copy executable to artifacts"
-          command: mv dist/* artifacts/
+          command: mv dist/Pytube-TKGUI.exe artifacts/Pytube-TKGUI_windows.exe
           shell: bash.exe
-      - run: dir artifacts
-      - store_artifacts:
-          path: artifacts/
       - persist_to_workspace:
           # Must be an absolute path, or relative path from working_directory
           root: artifacts
           # Must be relative path from root
           paths:
-            - "*.exe"
+            - "Pytube-TKGUI_windows.exe"
   pgr:
     docker:
       - image: cibuilds/github:0.10
@@ -65,7 +63,7 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            VERSION=$(my-binary --version)
+            VERSION=$(./artifacts/Pytube-TKGUI_linux --version)
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
       
 workflows:
@@ -73,7 +71,16 @@ workflows:
   build:
     jobs:
       - win-build:
-          name: windows
+          name: Windows
       - lin-build:
-          name: linux
-          requires: [windows]
+          name: Linux
+          requires: [Windows]
+      - pgr:
+          name: "Push Github Release"
+          requires: [Linux]
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              only: /^\d+\.\d+\.\d+$/
