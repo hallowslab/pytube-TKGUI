@@ -3,19 +3,15 @@ orbs:
   win: circleci/windows@2.4.1
 jobs:
   lin-build:
-    machine:
-      image: ubuntu-2004:current
+    docker:
+      - image: cimg/python:3.10.2
     resource_class: medium
     steps:
       - checkout:
           path: ~/project
-      - run: "sed -i -- 's/#deb-src/deb-src/g' /etc/apt/sources.list && sed -i -- 's/# deb-src/deb-src/g' /etc/apt/sources.list"
-      - run: sudo apt install python3-dev libssl-dev && sudo apt build-dep -y python3
-      - run: CONFIGURE_OPTS=--enable-shared pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
-      - run: curl -sSL https://install.python-poetry.org | python3 -
-      - run: ~/.local/bin/poetry install
-      - run: ~/.local/bin/poetry run task build
+      - run: poetry install
+      - run: poetry run task build
       - run: ls -al
       - run: ls -al dist
       - run: mv dist/* artifacts/
