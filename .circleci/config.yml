@@ -9,7 +9,7 @@ jobs:
     steps:
       - checkout:
           path: ~/project
-      - run: sudo apt install python3-dev python-dev
+      - run: sudo apt install python3-dev
       - run: pyenv install -v 3.8.10
       - run: mkdir -p ~/project/artifacts
       - run: curl -sSL https://install.python-poetry.org | python3 -
@@ -40,7 +40,7 @@ jobs:
             shell: cmd.exe
       - run:
             name: "Poetry build" 
-            command: "%APPDATA%\Python\\Scripts\\poetry run task build"
+            command: "%APPDATA%\\Python\\Scripts\\poetry run task build"
             shell: cmd.exe
       - run: dir
       - run:
