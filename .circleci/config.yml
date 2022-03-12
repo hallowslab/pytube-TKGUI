@@ -64,7 +64,7 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: |
-            VERSION=$(artifacts/Pytube-TKGUI_linux --version)
+            VERSION="$(artifacts/Pytube-TKGUI_linux --version)"
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./artifacts/
       
 workflows:
