@@ -16,8 +16,6 @@ if __name__ == "__main__":
     root = tk.Tk()
     MainApplication(root)
     try:
-        root.grid_columnconfigure(0,weight=1)
-        root.grid_rowconfigure(0,weight=1)
         root.mainloop()
     except Exception as e:
         logger.critical(f"Unhandled exception occurred:", exc_info=1)
