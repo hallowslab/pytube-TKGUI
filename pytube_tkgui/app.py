@@ -1,13 +1,14 @@
 import tkinter as tk
 from tkinter import N, W, E, S, Button
 
-from pytube_tkgui.utils import ToolTip
+from idlelib.tooltip import Hovertip
+
 from pytube_tkgui.functions import download_videos
 
 
 class OptionsWindow(tk.Toplevel):
     def __init__(self, parent, *args, **kwargs):
-        tk.Toplevel.__init__(self,parent, *args, **kwargs)
+        tk.Toplevel.__init__(self, parent, *args, **kwargs)
         self.parent = parent
         self.title = "Pytube-Options"
         self.initialize()
@@ -21,12 +22,11 @@ class OptionsWindow(tk.Toplevel):
 
         progressive = tk.Label(self, text="Progressive stream")
         progressive.pack()
-        tooltip = ToolTip(progressive, "This is a tooltip")
+        _ = Hovertip(progressive, "This is a tooltip", hover_delay=100)
 
 
-        # Grab the focus and set the window to always on top
+        # Grab the focus 
         self.grab_set()
-        #self.attributes('-topmost', 'true')
 
     # Release the grab when the window is closed
     def destroy(self):
