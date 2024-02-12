@@ -14,7 +14,7 @@ if __name__ == "__main__":
     setup_logger(getattr(args, "log_level"))
     logger = logging.getLogger(__name__)
     root = tk.Tk()
-    MainApplication(root)
+    app = MainApplication(root)
     try:
         root.mainloop()
     except Exception as e:

@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import N, W, E, S, Button
+from tkinter import N, W, E, S, Button, Text
 
 from idlelib.tooltip import Hovertip
 
@@ -35,7 +35,7 @@ class OptionsWindow(tk.Toplevel):
 
 class MainApplication(tk.Frame):
     def __init__(self, parent, *args, **kwargs):
-        tk.Frame.__init__(self, parent, *args, **kwargs)
+        super().__init__(parent, *args, **kwargs)
         self.parent = parent
         parent.title("Pytube-TKGUI")
         self.initialize()
