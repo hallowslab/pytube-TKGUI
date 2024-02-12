@@ -3,6 +3,8 @@ from tkinter import N, W, E, S, Button, Text
 
 from idlelib.tooltip import Hovertip
 
+from idlelib.tooltip import Hovertip
+
 from pytube_tkgui.functions import download_videos
 
 
